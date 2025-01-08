@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant user
+    participant browser
+    participant server
+
+    activate user 
+    user ->> browser: Clicks the link https://studies.cs.helsinki.fi/exampleapp/spa
+    activate browser
+    browser ->> server  : GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server 
+    server -->> browser : HTML document 
+    deactivate server
+     browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server -->> browser: CSS file
+    deactivate server
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate server
+    server -->> browser: JS file
+    Note right of browser : The code that will be executed by the browser to :<br> 1. get notes by sending  a GET request <br> to /exampleapp/data.json and then display all notes <br> 2. send a post request to /exampleapp/new_note_spa <br> when the "Save button" is clicked to register
+    deactivate server
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server -->> browser: JSON data file
+    Note right of browser  : browser executes spa.js code to create list elements for desplaying notes
+    browser -->> user : displays notes fetched
+    deactivate server
+    deactivate browser
+    user ->> browser : enters new note and presses save button
+    activate browser
+    Note right of browser : browser executes the js code to send a post request to /exampleapp/new_note_spa
+    browser ->> server : POST  https://studies.cs.helsinki.fi/exampleapp/new_note 
+    activate server 
+    server -->> browser : {"message":"note created"}
+    Note right of browser : the browser redraws notes
+     browser -->> user : updated note list 
+    deactivate server 
+    deactivate browser
+    deactivate user
+   
+    
+
