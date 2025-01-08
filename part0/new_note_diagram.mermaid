@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant user
+    participant browser
+    participant server
+
+    activate user
+    user ->> browser: Enter new note and press save
+    activate browser
+    browser ->> server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    server -->> browser: Response with redirection URL in the header's Location , /notes in our case 
+    Note right of browser: The URL will cause the browser to send a GET request to<br> https://studies.cs.helsinki.fi/exampleapp/notes
+    deactivate server
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server -->> browser: HTML document
+    Note right of browser : this HTML document contains in it's headers links to other files , such as main.css , main.js <br> this will cause other three GET surequests
+
+    deactivate server
+    activate browser
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server -->> browser: CSS file
+    deactivate server
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server -->> browser: JS file
+    deactivate server
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server -->> browser: JSON data file
+    deactivate server
+    browser -->> user: Updated notes displayed
+
+    deactivate browser
+    deactivate user
