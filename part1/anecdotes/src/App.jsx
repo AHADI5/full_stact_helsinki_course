@@ -13,27 +13,48 @@ const App  = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  //TODO : create an array of votes with the same length as the anecdotes array
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill({vote: 0 })) ;
+
   const [selected, setSelected] = useState(0) 
   const handleSelect  = () => setSelected(Math.floor(Math.random() * anecdotes.length)) ;
+  const handleVote = () => {
+    const copy = [...votes] ;
+    copy[selected] = {...copy[selected],vote: copy[selected].vote + 1} ; 
+    setVotes(copy) ;
+
+  }
 
   return (
     <div>
-      <DisplayAnecdote selected = {selected}  anecdotes={anecdotes}/>
+      <DisplayAnecdote selected = {selected}  anecdotes={anecdotes} votes = {votes}/>
+      <VoteButton handleVote = {handleVote}/>
       <SelectButton handleSelect = {handleSelect}/>
+      
     </div>
   )
 
 }
 
-const DisplayAnecdote = ({selected , anecdotes}) => {
+const DisplayAnecdote = ({selected , anecdotes , votes}) => {
+
   return (
-    <p>{anecdotes[selected]}</p>
+    <>
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected].vote} </p>
+      </>
   )
 }
 
 const SelectButton = ({handleSelect}) => {
   return (
     <button onClick = {handleSelect}>Next anecdote</button>
+  )
+}
+
+const VoteButton = ({handleVote}) => {
+  return (
+    <button onClick = {handleVote}>Vote</button>
   )
 }
 
